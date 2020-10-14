@@ -10,6 +10,7 @@ TagManager:
   - ChipCounter
   - HealthCounter
   - Bitter
+  - Door
   layers:
   - Default
   - TransparentFX
