@@ -16,6 +16,7 @@ public class MoveTim : MonoBehaviour{
     public float speed = 5f;
     public bool faceRight = true;  
     public Vector3 vectorMove, vectorStart;
+    public Animator anim;
 
     void Start(){
         rbd = gameObject.GetComponent<Rigidbody2D>();
@@ -30,6 +31,11 @@ public class MoveTim : MonoBehaviour{
 
         //Walking lines
         vectorMove = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
+        anim.SetFloat("Speed", Mathf.Abs(vectorMove.x * speed));
+        if(rbd.velocity.y != 0){
+            anim.SetBool("OnJump", true);
+            anim.SetFloat("Speed", 0f);
+        }
         if((vectorMove.x > 0 && !(faceRight)) || (vectorMove.x < 0 && faceRight)){            
             faceRight = !faceRight;
             transform.Rotate(Vector3.up * 180);
@@ -47,6 +53,7 @@ public class MoveTim : MonoBehaviour{
         //Jumping lines
         if(Input.GetKeyDown(jumpKey)){   
             if(rbd.velocity.y == 0){
+                anim.SetBool("OnJump", true);
                 if(rbd.gravityScale < 0){
                     rbd.velocity = new Vector2(rbd.velocity.x, jumpHeight *-1);            
                 }else{
@@ -54,8 +61,11 @@ public class MoveTim : MonoBehaviour{
                 }                
             }                                      
         }        
+        if(rbd.velocity.y == 0 && rbd.velocity.x == 0){
+            anim.SetBool("OnJump", false);
+        }        
     }
-
+    
     public void decreaseHealth(int damage){
         health -= damage;
         txtHPercent.text = health.ToString();                       
